@@ -11,7 +11,8 @@ if [ ! -d "build" ]; then
 fi
 chmod +x test/runall.sh
 cd build/
-export CUDACXX="/usr/local/cuda/bin/nvcc"
+#export CUDACXX="/usr/local/cuda/bin/nvcc"
+export CUDACXX=$NVCC_HOME
 cmake ..
 make -j4
 echo "Done with setup, ready to run"

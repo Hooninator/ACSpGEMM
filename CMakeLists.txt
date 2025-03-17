@@ -12,28 +12,28 @@ include_directories(externals)
 option(CUDA_BUILD_CC50 "Build with compute capability 5.0 support" FALSE)
 option(CUDA_BUILD_CC52 "Build with compute capability 5.2 support" FALSE)
 option(CUDA_BUILD_CC60 "Build with compute capability 6.0 support" FALSE)
-option(CUDA_BUILD_CC61 "Build with compute capability 6.1 support" TRUE)
+option(CUDA_BUILD_CC61 "Build with compute capability 6.1 support" FALSE)
 option(CUDA_BUILD_CC70 "Build with compute capability 7.0 support" FALSE)
 option(CUDA_BUILD_INFO "Build with kernel statistics and line numbers" TRUE)
 option(CUDA_BUILD_DEBUG "Build with kernel debug" FALSE)
 
 # CUDA Flags
-if (CUDA_BUILD_CC50)
-	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_50,code=sm_50")
-endif ()
-if (CUDA_BUILD_CC52)
-	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_52,code=sm_52")
-endif ()
-if (CUDA_BUILD_CC60)
-	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_60,code=sm_60")
-endif ()
-if (CUDA_BUILD_CC61)
-	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_61,code=sm_61")
-endif ()
-if (CUDA_BUILD_CC70)
-	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_70,code=sm_70")
-endif ()
-
+#if (CUDA_BUILD_CC50)
+#	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_50,code=sm_50")
+#endif ()
+#if (CUDA_BUILD_CC52)
+#	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_52,code=sm_52")
+#endif ()
+#if (CUDA_BUILD_CC60)
+#	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_60,code=sm_60")
+#endif ()
+#if (CUDA_BUILD_CC61)
+#	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_61,code=sm_61")
+#endif ()
+#if (CUDA_BUILD_CC70)
+#	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_70,code=sm_70")
+#endif ()
+string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_80,code=sm_80")
 string(APPEND CMAKE_CUDA_FLAGS " -std=c++14 -Xcompiler -Wall -D_FORCE_INLINES -DVERBOSE --expt-extended-lambda -use_fast_math --expt-relaxed-constexpr")
 
 if (CUDA_BUILD_INFO)
@@ -54,6 +54,9 @@ else()
 set(GCC_COVERAGE_LINK_FLAGS  "-lstdc++fs")
 string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -mlzcnt -Wno-unknown-pragmas")
 endif()
+
+
+find_package(CUDAToolkit)
 
 
 set(ACSPGEMMHEADERS
@@ -113,31 +116,33 @@ add_library(acSpGEMM
 # Comparison implementations for cuSparse
 set(COMP_SOURCES "externals/cusparse/source/cuSparseMultiply.cu")
 
-add_library(comp_implementations
-				${COMP_SOURCES}
-)
+#add_library(comp_implementations
+#				${COMP_SOURCES}
+#)
+#target_link_libraries(comp_implementations PUBLIC CUDA::cusparse)
+#target_include_directories(comp_implementations PUBLIC CUDA::cusparse)
 
 # Executable to run a single test
-add_executable(HostTest 
-				source/main.cpp
-)
-
-# Executable to perform a complete testrun
-add_executable(performTestCase
-				source/performTestCase.cpp
-)
-
-# Executable to test bit stability
-add_executable(checkBitStability
-				source/checkBitStability.cpp
-)
-
-if(WIN32)
-set_property(TARGET performTestCase PROPERTY CXX_STANDARD 17)
-set_property(TARGET checkBitStability PROPERTY CXX_STANDARD 17)
-endif()
-
-# Link Libraries
-target_link_libraries(HostTest acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse )
-target_link_libraries(performTestCase acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse ${GCC_COVERAGE_LINK_FLAGS} )
-target_link_libraries(checkBitStability acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse ${GCC_COVERAGE_LINK_FLAGS} )
+#add_executable(HostTest 
+#				source/main.cpp
+#)
+#
+## Executable to perform a complete testrun
+#add_executable(performTestCase
+#				source/performTestCase.cpp
+#)
+#
+## Executable to test bit stability
+#add_executable(checkBitStability
+#				source/checkBitStability.cpp
+#)
+#
+#if(WIN32)
+#set_property(TARGET performTestCase PROPERTY CXX_STANDARD 17)
+#set_property(TARGET checkBitStability PROPERTY CXX_STANDARD 17)
+#endif()
+#
+## Link Libraries
+#target_link_libraries(HostTest acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} CUDA::cusparse)
+#target_link_libraries(performTestCase acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} CUDA::cusparse ${GCC_COVERAGE_LINK_FLAGS} )
+#target_link_libraries(checkBitStability acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} CUDA::cusparse ${GCC_COVERAGE_LINK_FLAGS} )
