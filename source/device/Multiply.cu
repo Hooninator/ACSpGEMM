@@ -807,7 +807,7 @@ namespace ACSpGEMM {
 		MultiplyCall<DataType> call(A, B, matOut, scheduling_traits, exec_stats);
 
 		//Threads, BlocksPerMP, NNZPerTread, InputPerThread, RetainElements, MaxChungsTo Merge, MaxChunGenrel, MergePathoption, Debug
-		bool called = EnumOption<256, 256, 128, EnumOption<3, 4, 1, EnumOption<2, 2, 1, EnumOption<4, 4, 1, EnumOption<4, 4, 1, EnumOption<16, 16, 8, EnumOption<256, 512, 256, EnumOption<8, 8, 8, EnumOption<0, 1, 1>>>>>>>>>
+		bool called = EnumOption<128, 256, 128, EnumOption<1, 1, 1, EnumOption<2, 2, 1, EnumOption<2, 2, 1, EnumOption<1, 1, 1, EnumOption<16, 16, 8, EnumOption<256, 512, 256, EnumOption<8, 8, 8, EnumOption<0, 1, 1>>>>>>>>>
 			::call(Selection<MultiplyCall<DataType>>(call), scheduling_traits.Threads, scheduling_traits.BlocksPerMp, scheduling_traits.NNZPerThread, scheduling_traits.InputElementsPerThreads, scheduling_traits.RetainElementsPerThreads, scheduling_traits.MaxChunksToMerge, scheduling_traits.MaxChunksGeneralizedMerge, scheduling_traits.MergePathOptions, (int)Debug_Mode);
 		
 		if(!called)
